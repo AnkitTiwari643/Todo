@@ -40,8 +40,7 @@ public class TodoService {
     public void updateTodo(Todo todo) {
         Todo previousTodo = findById(todo.getId());
         previousTodo.setDescription(todo.getDescription());
-        // TODO: 02-03-2024 change format of target date to match with html date 
-//        previousTodo.setTargetDate(todo.getTargetDate());
+        previousTodo.setTargetDate(todo.getTargetDate());
         previousTodo.setDone(todo.isDone());
     }
 }
