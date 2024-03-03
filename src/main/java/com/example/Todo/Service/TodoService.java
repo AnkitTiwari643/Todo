@@ -5,20 +5,22 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 @Service
 public class TodoService {
-    private static ArrayList<Todo> todos = new ArrayList<>();
+    private static List<Todo> todos = new ArrayList<>();
     private static int todoCount;
 
     static {
-        todos.add(new Todo(++todoCount, "in28Minutes", "Learn Spring Boot", LocalDate.now().plusMonths(1), false));
-        todos.add(new Todo(++todoCount, "in28Minutes", "Learn DevOps", LocalDate.now().plusMonths(2), false));
+        todos.add(new Todo(++todoCount, "ankit", "Learn Spring Boot", LocalDate.now().plusMonths(1), false));
+        todos.add(new Todo(++todoCount, "ankit", "Learn DevOps", LocalDate.now().plusMonths(2), false));
     }
 
-    public ArrayList<Todo> findByUsername(String username) {
-        return todos;
+    public List<Todo> findByUsername(String username) {
+        Predicate<? super Todo> predicate = todo -> todo.getUsername().equalsIgnoreCase(username);
+        return todos.stream().filter(predicate).toList();
     }
 
     public void addTodo(String username, String description, LocalDate targetDate, boolean isDone) {
