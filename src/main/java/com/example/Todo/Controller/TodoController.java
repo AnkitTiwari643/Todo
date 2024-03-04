@@ -3,6 +3,8 @@ package com.example.Todo.Controller;
 import com.example.Todo.Modal.Todo;
 import com.example.Todo.Service.TodoService;
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -26,14 +28,15 @@ public class TodoController {
 
     @RequestMapping(value = "list-todos", method = RequestMethod.GET)
     public String listAllTodos(ModelMap map) {
-        List<Todo> todo = todoService.findByUsername("in28Minutes");
+        String userName = getLoggedInUsername();
+        List<Todo> todo = todoService.findByUsername(userName);
         map.addAttribute("todos", todo);
         return "listTodos";
     }
 
     @RequestMapping(value = "add-todo", method = RequestMethod.GET)
     public String showNewTodoPage(ModelMap map) {
-        String userName = (String)map.get("username");
+        String userName = getLoggedInUsername();
         Todo todo = new Todo(0, userName, "", LocalDate.now(), false);
         map.put("todo", todo);
         return "todo";
@@ -68,5 +71,10 @@ public class TodoController {
         }
         todoService.updateTodo(todo);
         return "redirect:list-todos";
+    }
+
+    private String getLoggedInUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 }
